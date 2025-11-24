@@ -2,8 +2,11 @@
 
 {% block content %}
 <div>
+    <a href="{% url 'create-room' %}">Create Room</a>
     {% for room in rooms %}
-        <h3>{{room.id}} -- <a href="{% url 'room-page' room.id %}">{{room.name}}</a></h3>
+        <p>@{{ room.host.username }}</p>
+        <h3>{{room.id}} -- <a href="">{{room.name}}</a></h3>
+        <small>{{room.topic.name}}</small>
     {% endfor %}
 </div>
 {% endblock %}
