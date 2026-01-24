@@ -1,15 +1,43 @@
 {% extends "main.html" %}
 
 {% block content %}
+<style>
+    .home-container{
+        display:grid;
+        grid-template-columns: 1fr 3fr;
+    }
+</style>
 <div>
-    <a href="{% url 'create-room' %}">Create Room</a><br>
-    {% for room in rooms %}
-        <a href='{% url "update-room" room.id %}'>Edit</a>
-        <a href='{% url "delete-room" room.id %}'>Delete</a><br>
-        <p>@{{ room.host.username }}</p><br>
-        <h3>{{room.id}} -- <a href="">{{room.name}}</a></h3>
-        <small>{{room.topic.name}}</small>
+    <form method="GET" action="{% url 'room' %}">
+        <input type='text' name="q" placeholder="Search here..." />
+    </form>
+</div>
+<hr>
+<div class="home-container">
+    <div>
+        <h2>Browse Topics</h2>
         <hr>
-    {% endfor %}
+        <div>
+            <a href='{% url "room" %}'>All</a>
+        </div>
+    
+
+        {% for topic in topics %}
+            <div><a href='{% url "room" %}?q={{topic.name}}'>{{topic.name}}</a></div>
+        {% endfor %}
+
+    </div>
+    <div>
+        <h3>{{rooms_count}} rooms available</h3>
+        <a href="{% url 'create-room' %}">Create Room</a><br>
+        {% for room in rooms %}
+            <a href='{% url "update-room" room.id %}'>Edit</a>
+            <a href='{% url "delete-room" room.id %}'>Delete</a><br>
+            <p>@{{ room.host.username }}</p><br>
+            <h3>{{room.id}} -- <a href="">{{room.name}}</a></h3>
+            <small>{{room.topic.name}}</small>
+            <hr>
+        {% endfor %}
+    </div>
 </div>
 {% endblock %}
