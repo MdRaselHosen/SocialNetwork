@@ -8,19 +8,14 @@ def login_(request):
         email = request.POST.get('email')
         password = request.POST.get('password')
         
-        print(f"Login attempt - email: {email}, password: {password}")
-        
         try:
             user = User.objects.get(email=email)
-            print(f"User found: {user.email}")
             
             if hasattr(user, 'check_password') and user.check_password(password):
-                print(f"Password matched (hashed)")
                 request.session['user_id'] = user.id
                 request.session['user_email'] = user.email
                 return redirect('room')
             elif user.password == password:
-                print(f"Password matched (plain-text)")
                 request.session['user_id'] = user.id
                 request.session['user_email'] = user.email
                 return redirect('room')
@@ -36,6 +31,10 @@ def register(request):
         username = request.POST.get('username')
         email = request.POST.get('email')
         password = request.POST.get('password')
+
+        user = User.objects.filter(email=email)
+        if len(user)> 0:
+            return redirect(request.path)
         
         if username and email and password:
             User.objects.create(username=username, email=email, password=password)
