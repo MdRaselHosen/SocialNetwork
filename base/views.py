@@ -4,11 +4,11 @@ from .models import Room, Topic
 from .forms import RoomForm
 from django.db.models import Q
 
-def home(request):
-    topics = Topic.objects.all()
-    context = {'topics':topics}
+# def home(request):
+#     topics = Topic.objects.all()
+#     context = {'topics':topics}
     
-    return render(request, "base/home.html", context)
+#     return render(request, "base/home.html", context)
 
 def room(request):
     q = request.GET.get('q') if request.GET.get('q')!= None else ''
