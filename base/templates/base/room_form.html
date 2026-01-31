@@ -9,17 +9,40 @@
       <div class="card shadow">
         <div class="card-body">
 
-          <h4 class="text-center mb-4">Create Post</h4>
+            <h4 class="text-center mb-4">
+            {% if page == 'update' %}
+                Update Post
+            {% else %}
+                Create Post
+            {% endif %}
+            </h4>
+
+
 
           <form method="POST">
             {% csrf_token %}
 
-            <div class="form-group">
-              <label for="topic">Topic</label>
-              <select name="topic" id="topic" class="form-control" required>
-                <option value="">Select Topic--</option>
+            <!-- <div class="form-group">
+              <label>Topic</label>
+              <select name="topic" class="form-control" required>
                 {% for topic in topics %}
-                  <option value="{{ topic.name }}">
+                    <option value="{{ topic.id }}"
+                        {% if page == 'update' and topic.name == room.topic.name %}
+                            selected
+                        {% endif %}
+                    >{{topic.name}}</option>
+                {% endfor %}
+              </select>
+            </div> -->
+            <div class="form-group">
+              <label>Topic</label>
+              <select name="topic" class="form-control" required>
+                {% for topic in topics %}
+                  <option value="{{ topic.id }}"
+                    {% if page == 'update' and topic.id == room.topic.id %}
+                      selected
+                    {% endif %}
+                  >
                     {{ topic.name }}
                   </option>
                 {% endfor %}
@@ -33,7 +56,7 @@
                 name="title"
                 id="name"
                 class="form-control"
-                placeholder="Enter post title"
+                value="{% if page == 'update' %}{{room.name}}{% endif %}"
                 required
               >
             </div>
@@ -45,13 +68,16 @@
                 id="description"
                 class="form-control"
                 rows="4"
-                placeholder="Write your post here..."
-              ></textarea>
+              >{% if page == 'update' %}{{ room.description }}{% endif %}</textarea>
             </div>
 
             <div class="text-center mt-4">
               <button type="submit" class="btn btn-primary">
-                Post
+                {% if page == 'update' %}
+                    Update
+                {% else %}
+                    Post
+                {% endif %}
               </button>
             </div>
 

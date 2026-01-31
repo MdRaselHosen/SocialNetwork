@@ -33,15 +33,13 @@ def createRoom(request):
 
         topic_obj, created = Topic.objects.get_or_create(name=topic)
         Room.objects.create(
-            # host = request.user if getattr(request, 'user', None) and request.user.is_authenticated else None,
             host = request.user,
             topic = topic_obj,
             name = title,
             description = desc
         )
         return redirect('room')
-    
-    # context = {"form":form}
+
     topics = Topic.objects.all()
     context = {"topics":topics}
     return render(request, "base/room_form.html", context)
@@ -49,25 +47,21 @@ def createRoom(request):
 @login_required(login_url="user/login/")
 def updateRoom(request, pk):
     room = Room.objects.get(id=pk)
+    topics = Topic.objects.all()
 
     if request.method == 'POST':
-        topic = request.POST.get('topic')
-        title = request.POST.get('title')
-        desc = request.POST.get('description')
+        room.topic.name = request.POST.get('topic')
+        room.name = request.POST.get('title')
+        room.description = request.POST.get('description')
 
-        topic_obj, created = Topic.objects.get(name=topic)
-
-        room.topic = topic_obj
-        room.name = title
-        room.description = desc
         if getattr(request, 'user', None) and request.user.is_authenticated:
             room.host = request.user
         room.save()
 
         return redirect('room')
 
-    topics = Topic.objects.all()
-    context = {'room': room, 'topics': topics}
+    
+    context = {'room': room, 'topics': topics, 'page':'update'}
     return render(request, 'base/room_form.html', context)
 
 @login_required(login_url="user/login/")
