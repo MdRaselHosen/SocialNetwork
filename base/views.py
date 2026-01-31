@@ -20,8 +20,9 @@ def room(request):
 
 def postDetails(requset, pk):
     post = Room.objects.get(pk=pk)
+    context = {'room': post}
 
-    return render(requset, "base/post-details.html")
+    return render(requset, "base/post-details.html",context)
 
 @login_required(login_url="user/login/")
 def createRoom(request):

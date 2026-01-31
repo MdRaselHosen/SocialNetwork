@@ -1,6 +1,28 @@
 {% extends "main.html" %}
 
 {% block content %}
-<h3>Post details</h3>
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+
+            <div class="card shadow">
+                <div class="card-body">
+
+                    <h3 class="card-title mb-3">{{ room.name }}</h3>
+
+                    <p class="text-muted mb-2">Topic: <span>{{ room.topic.name }}</span></p>
+                    <hr>
+                    <p class="text-muted">Posted by <strong>@{{ room.host.username | capfirst }}</strong>. {{ room.created | timesince }} ago</p>
+                    <hr>
+
+                    <p class="card-text" style="font-size: 1.1rem;">{{room.description}}</p>
+                    <hr>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 {% endblock content %}
 
