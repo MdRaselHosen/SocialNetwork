@@ -1,27 +1,67 @@
 {% extends "main.html" %}
 
 {% block content %}
+
 <div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card shadow">
-                <div class="card-body">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
 
-                    <h4 class="text-center mb-4">Create Post</h4>
-    <form method="POST" action="">
-        {% csrf_token %}
-        {{ form.as_p }}
+      <div class="card shadow">
+        <div class="card-body">
 
-        <div class="text-center mt-3">
-            <button type="submit" class="btn btn-primary">
+          <h4 class="text-center mb-4">Create Post</h4>
+
+          <form method="POST">
+            {% csrf_token %}
+
+            <div class="form-group">
+              <label for="topic">Topic</label>
+              <select name="topic" id="topic" class="form-control" required>
+                <option value="">Select Topic--</option>
+                {% for topic in topics %}
+                  <option value="{{ topic.name }}">
+                    {{ topic.name }}
+                  </option>
+                {% endfor %}
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="name">Title</label>
+              <input
+                type="text"
+                name="title"
+                id="name"
+                class="form-control"
+                placeholder="Enter post title"
+                required
+              >
+            </div>
+
+            <div class="form-group">
+              <label for="description">Description</label>
+              <textarea
+                name="description"
+                id="description"
+                class="form-control"
+                rows="4"
+                placeholder="Write your post here..."
+              ></textarea>
+            </div>
+
+            <div class="text-center mt-4">
+              <button type="submit" class="btn btn-primary">
                 Post
-            </button>
-        </div>
-    </form>
-    </div>
-    </div>
-    </div>
-    </div>
-</div>
-{% endblock content %}
+              </button>
+            </div>
 
+          </form>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+{% endblock content %}

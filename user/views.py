@@ -1,5 +1,7 @@
 from django.shortcuts import render, redirect
 from .models import User
+from django.contrib.auth import login, logout
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
@@ -12,12 +14,10 @@ def login_(request):
             user = User.objects.get(email=email)
             
             if hasattr(user, 'check_password') and user.check_password(password):
-                request.session['user_id'] = user.id
-                request.session['user_email'] = user.email
+                login(request, user)
                 return redirect('room')
             elif user.password == password:
-                request.session['user_id'] = user.id
-                request.session['user_email'] = user.email
+                login(request, user)
                 return redirect('room')
             else:
                 return render(request, "login.html", {'error': 'Invalid credentials'})
@@ -44,6 +44,11 @@ def register(request):
 
     return render(request, "register.html")
 
+@login_required(login_url="user/login/")
 def logout_(request):
     request.session.flush()
     return redirect('/')
+
+@login_required(login_url="user/login/")
+def profile(request):
+    return render(request, 'profile.html')

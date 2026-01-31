@@ -48,16 +48,23 @@
                 {{ room.name }}
               </a>
             </h5>
-
+            
             <div>
-              <a href="{% url 'update-room' room.id %}"
-                 class="btn btn-outline-secondary btn-sm">
-                Edit
-              </a>
-              <a href="{% url 'delete-room' room.id %}"
-                 class="btn btn-outline-danger btn-sm">
-                Delete
-              </a>
+              {% if user.is_authenticated and room.host == request.user  %}
+                <a href="{% url 'update-room' room.id %}"
+                  class="btn btn-outline-secondary btn-sm">
+                  Edit
+                </a>
+                <a href="{% url 'delete-room' room.id %}"
+                  class="btn btn-outline-danger btn-sm">
+                  Delete
+                </a>
+              {% else %}
+                  <a href="{% url 'post-details' room.id %}"
+                  class="btn btn-outline-danger btn-sm">
+                  See more
+                  </a>
+              {% endif %}
             </div>
           </div>
 

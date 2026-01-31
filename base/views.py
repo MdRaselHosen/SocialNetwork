@@ -1,14 +1,9 @@
 from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
 from .models import Room, Topic
-# Create your views here.
-from .forms import RoomForm
 from django.db.models import Q
 
-# def home(request):
-#     topics = Topic.objects.all()
-#     context = {'topics':topics}
-    
-#     return render(request, "base/home.html", context)
+
 
 def room(request):
     q = request.GET.get('q') if request.GET.get('q')!= None else ''
@@ -23,29 +18,59 @@ def room(request):
     context = {'rooms': rooms, 'topics':topics, 'rooms_count': rooms_count}
     return render(request, "base/room.html", context)
 
+def postDetails(requset, pk):
+    post = Room.objects.get(pk=pk)
+
+    return render(requset, "base/post-details.html")
+
+@login_required(login_url="user/login/")
 def createRoom(request):
-    form = RoomForm()
+
     if request.method== 'POST':
-        form = RoomForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('home')
-    context = {"form":form}
+        topic = request.POST.get('topic')
+        title = request.POST.get('title')
+        desc = request.POST.get('description')
+
+        topic_obj, created = Topic.objects.get_or_create(name=topic)
+        Room.objects.create(
+            # host = request.user if getattr(request, 'user', None) and request.user.is_authenticated else None,
+            host = request.user,
+            topic = topic_obj,
+            name = title,
+            description = desc
+        )
+        return redirect('room')
+    
+    # context = {"form":form}
+    topics = Topic.objects.all()
+    context = {"topics":topics}
     return render(request, "base/room_form.html", context)
 
+@login_required(login_url="user/login/")
 def updateRoom(request, pk):
     room = Room.objects.get(id=pk)
-    form = RoomForm(instance=room)
-    if request.method=='POST':
-        form = RoomForm(request.POST, instance=room)
-        
-        if form.is_valid():
-            form.save()
-            return redirect('room')
 
-    context = {'form':form}
+    if request.method == 'POST':
+        topic = request.POST.get('topic')
+        title = request.POST.get('title')
+        desc = request.POST.get('description')
+
+        topic_obj, created = Topic.objects.get(name=topic)
+
+        room.topic = topic_obj
+        room.name = title
+        room.description = desc
+        if getattr(request, 'user', None) and request.user.is_authenticated:
+            room.host = request.user
+        room.save()
+
+        return redirect('room')
+
+    topics = Topic.objects.all()
+    context = {'room': room, 'topics': topics}
     return render(request, 'base/room_form.html', context)
 
+@login_required(login_url="user/login/")
 def deleteRoom(request,pk):
     room = Room.objects.get(id=pk)
 
