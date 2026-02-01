@@ -44,7 +44,7 @@
 
           <div class="d-flex justify-content-between">
             <h5 class="card-title">
-              <a href="#" class="text-decoration-none">
+              <a href="{% url 'post-details' room.id %}" class="text-decoration-none">
                 {{ room.name }}
               </a>
             </h5>
@@ -69,17 +69,44 @@
           </div>
 
           <p class="mb-1 text-muted">
-            @{{ room.host.username }}
+            @{{ room.host.username | capfirst }}
           </p>
-          <span class="badge badge-info">
-            {{ room.topic.name }}
-          </span>
+          {% if room.description %}
+            <p class="text-muted small">
+              {{ room.description | truncatewords:30 }}
+            </p>
+          {% endif %}
 
         </div>
       </div>
       {% endfor %}
 
     </div>
+    <nav aria-label="Page nagigation" class="mt-4">
+          <ul class="pagination justify-content-center">
+            {% if posts.has_previous %}
+              <li class="page-item">
+                <a class="page-link" href="?page=1">First</a>
+              </li>
+              <li class="page-item">
+                <a class="page-link" href="?page={{ posts.previous_page_number }}">Previous</a>
+              </li>
+            {% endif %}
+            <li class="page-item active">
+              <span class="page-link">Page {{ posts.number }} of {{ posts.paginator.num_pages}}</span>
+            </li>
+
+            {% if posts.has_next %}
+            <li class="page-item">
+              <a class="page-link" href="?page={{posts.next_page_number}}">Next</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" href="?page={{ posts.paginator.num_pages}}">Last</a>
+            </li>
+            {% endif %}
+
+          </ul>
+        </nav>
 
   </div>
 </div>
