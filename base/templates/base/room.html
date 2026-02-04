@@ -50,21 +50,10 @@
             </h5>
             
             <div>
-              {% if user.is_authenticated and room.host == request.user  %}
-                <a href="{% url 'update-room' room.id %}"
-                  class="btn btn-outline-secondary btn-sm">
-                  Edit
+                <a href="{% url 'post-details' room.id %}"
+                class="btn btn-outline-danger btn-sm">
+                See more
                 </a>
-                <a href="{% url 'delete-room' room.id %}"
-                  class="btn btn-outline-danger btn-sm">
-                  Delete
-                </a>
-              {% else %}
-                  <a href="{% url 'post-details' room.id %}"
-                  class="btn btn-outline-danger btn-sm">
-                  See more
-                  </a>
-              {% endif %}
             </div>
           </div>
 

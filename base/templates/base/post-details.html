@@ -2,27 +2,132 @@
 
 {% block content %}
 
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
+<div class="container mt-4">
+  <div class="row">
 
-            <div class="card shadow">
-                <div class="card-body">
+    <!-- LEFT SIDEBAR : Topics -->
+    <div class="col-md-3 mb-4">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title">Browse Topics</h5>
+          <hr>
 
-                    <h3 class="card-title mb-3">{{ room.name }}</h3>
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+              <a href="{% url 'room' %}" class="text-decoration-none">All</a>
+            </li>
 
-                    <p class="text-muted mb-2">Topic: <span>{{ room.topic.name }}</span></p>
-                    <hr>
-                    <p class="text-muted">Posted by <strong>@{{ room.host.username | capfirst }}</strong>. {{ room.created | timesince }} ago</p>
-                    <hr>
-
-                    <p class="card-text" style="font-size: 1.1rem;">{{room.description}}</p>
-                    <hr>
-                </div>
-            </div>
+            {% for topic in topics %}
+              <li class="list-group-item">
+                <a href="{% url 'room' %}?q={{ topic.name }}"
+                   class="text-decoration-none">
+                  {{ topic.name }}
+                </a>
+              </li>
+            {% endfor %}
+          </ul>
         </div>
+      </div>
     </div>
+
+    <!-- MIDDLE : POST DETAILS -->
+    <div class="col-md-6 mb-4">
+      <div class="card shadow">
+        <div class="card-body">
+
+          <h3 class="card-title mb-3">
+            {{ room.name }}
+          </h3>
+
+          <p class="text-muted mb-2">
+            Topic:
+            <span class="badge badge-info">
+              {{ room.topic.name }}
+            </span>
+          </p>
+
+          <p class="text-muted">
+            Posted by
+            <strong>@{{ room.host.username|capfirst }}</strong>
+            · {{ room.created|timesince }} ago
+          </p>
+
+          <hr>
+
+          <p class="card-text" style="font-size: 1.05rem;">
+            {{ room.description }}
+          </p>
+
+          <hr>
+
+          <!-- Actions -->
+          <div class="d-flex justify-content-between">
+            <a href="{% url 'room' %}" class="btn btn-outline-secondary btn-sm">
+              ← Back
+            </a>
+
+            {% if user.is_authenticated and room.host == request.user %}
+              <div>
+                <a href="{% url 'update-room' room.id %}"
+                   class="btn btn-outline-primary btn-sm">
+                  Edit
+                </a>
+                <a href="{% url 'delete-room' room.id %}"
+                   class="btn btn-outline-danger btn-sm">
+                  Delete
+                </a>
+              </div>
+            {% endif %}
+          </div>
+          <div class="mt-5">
+            {% for message in messages %}
+            <p>@{{message.user.username}} {{message.created | timesince}}</p>
+            <p>{{message}}</p>
+            {% endfor %}
+          </div>
+
+        </div>
+        <div class="mt-3">
+            <form method="POST">
+                {% csrf_token %}
+                <input type="text" name="comment" placeholder="Comment here...">
+                <button type="submit" class="btn btn-outline-primary">Comment</button>
+            </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT SIDEBAR : COMMENTS -->
+    <div class="col-md-3 mb-4">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title">Comments
+          </h5>
+          <hr>
+          {% for message in messages %}
+            <p>@{{message.user.username | capfirst}}</p>
+            {% endfor %}
+
+          <!-- {% if messages %}
+            {% for message in messages %}
+              <div class="mb-3">
+                <strong>@{{ message.user.username|capfirst }}</strong>
+                <p class="mb-1 text-muted small">
+                  {{ message.body }}
+                </p>
+              </div>
+            {% endfor %}
+          {% else %}
+            <p class="text-muted small">
+              No comments yet.
+            </p>
+          {% endif %} -->
+
+        </div>
+      </div>
+    </div>
+
+  </div>
 </div>
 
-{% endblock content %}
-
+{% endblock %}

@@ -1,11 +1,15 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from .models import Room, Topic
+from .models import Room, Topic, Message
 from django.db.models import Q
 
 
 
 def room(request):
+
+    messages = Message.objects.all()
+
+
     q = request.GET.get('q') if request.GET.get('q')!= None else ''
     rooms = Room.objects.filter(
         Q(topic__name__icontains=q) |
@@ -19,8 +23,24 @@ def room(request):
     return render(request, "base/room.html", context)
 
 def postDetails(requset, pk):
+    topic = Topic.objects.all()
     post = Room.objects.get(pk=pk)
-    context = {'room': post}
+    # postmessages = post.message_set.all().order_by('created')
+    room_message = Message.objects.filter(room=pk)
+
+    if requset.method == 'POST':
+        comment = requset.POST.get('comment')
+        Message.objects.create(
+            user = requset.user,
+            room = post,
+            body = comment
+        )
+        
+    context = {
+        'topics':topic,
+        'room': post,
+        'messages': room_message
+    }
 
     return render(requset, "base/post-details.html",context)
 
