@@ -94,3 +94,13 @@ def deleteRoom(request,pk):
         return redirect('room')
     context = {'obj':room}
     return render(request, 'base/deleteRoom.html', context)
+
+@login_required(login_url="user/login")
+def deleteMessage(request, pk):
+    try:
+        message = Message.objects.get(pk=pk)
+        if request.user == message.user or request.user == message.room.host:
+            message.delete()
+        return redirect('post-details', pk=message.room.id)
+    except Message.DoesNotExist:
+        return redirect('room')
