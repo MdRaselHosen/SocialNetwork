@@ -8,5 +8,8 @@ urlpatterns = [
     path("update-room/<str:pk>/", views.updateRoom, name='update-room'),
     path("delete-room/<str:pk>/", views.deleteRoom, name='delete-room'),
     path("post-details/<str:pk>/", views.postDetails, name='post-details'),
-    path("delete-message/<str:pk>/", views.deleteMessage, name="delete-message")
+    path("delete-message/<str:pk>/", views.deleteMessage, name="delete-message"),
+    path("user-details/<str:pk>/", views.userDetails, name='user-details'),
+    path('user/<int:pk>/', views.userDetails, name='user-details'),
+
 ]

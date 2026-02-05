@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from .models import Room, Topic, Message
 from django.db.models import Q
+from user.models import User
 
 
 
@@ -104,3 +105,15 @@ def deleteMessage(request, pk):
         return redirect('post-details', pk=message.room.id)
     except Message.DoesNotExist:
         return redirect('room')
+    
+
+def userDetails(request, pk):
+    room = Room.objects.get(pk=pk)
+    user = User.objects.get(pk=room.host.id)
+    rooms = Room.objects.filter(host=user).order_by('-created')
+
+    context = {
+        'profile_user': user,
+        'rooms': rooms
+    }
+    return render(request, 'base/post-user-details.html', context)

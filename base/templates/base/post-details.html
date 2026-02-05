@@ -38,10 +38,7 @@
           </h3>
 
           <p class="text-muted mb-2">
-            Topic:
-            <span class="badge badge-info">
-              {{ room.topic.name }}
-            </span>
+            Topic: {{ room.topic.name }}
           </p>
 
           <p class="text-muted">
@@ -83,7 +80,7 @@
             <p>@{{message.user.username}} {{message.created | timesince}}</p>
             <p>{{message}}</p>
             {% if request.user == room.host or request.user == message.user %}
-            <a href="{% url 'delete-message' message.id %}">Delete</a>
+            <a href="{% url 'delete-message' message.id %}" class="btn btn-outline-danger">Delete</a>
             {% endif %}
             {% endfor %}
           </div>

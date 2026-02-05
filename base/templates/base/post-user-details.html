@@ -1,0 +1,88 @@
+{% extends "main.html" %}
+
+{% block content %}
+<div class="container mt-5">
+  <div class="row justify-content-center mb-4">
+    <div class="col-md-8">
+      <div class="card shadow-sm">
+        <div class="card-body d-flex align-items-center">
+          <div class="me-4">
+            {% comment %} {% if user.profile and user.profile.image %}
+            <img
+              src="{{ user.profile.image.url }}"
+              alt="Profile Picture"
+              class="rounded-circle"
+              style="width: 120px; height: 120px; object-fit: cover"
+            />
+            {% else %}
+            <img
+              src="https://via.placeholder.com/300x200"
+              alt=""
+              class="rounded-circle"
+              style="width: 120px; height: 120px; object-fit: cover"
+            />
+            {% endif %} {% endcomment %}
+          </div>
+          <div>
+            <h4>{{profile_user.username | capfirst}}</h4>
+            <p class="mb-1 text-muted">{{profile_user.email}}</p>
+            {% if user.profile.bio %}
+            <p class="mb-0">{{profile_user.bio}}</p>
+            {% endif %}
+            {% comment %} <a class="btn btn-outline-primary btn-sm mt-3">Edit Profile</a>
+            <a href="{% url 'logout' %}" class="btn btn-outline-primary btn-sm mt-3"
+              >Logout</a
+            > {% endcomment %}
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row justify-content-center">
+  <div class="col-md-8">
+
+    <h5 class="mb-3">Posts by {{ profile_user.username|capfirst }}</h5>
+
+    {% for room in rooms %}
+    <div class="card mb-3 shadow-sm">
+      <div class="card-body">
+
+        <div class="d-flex justify-content-between">
+          <h5 class="card-title">
+            <a href="{% url 'post-details' room.id %}" class="text-decoration-none">
+              {{ room.name }}
+            </a>
+          </h5>
+
+          <a href="{% url 'post-details' room.id %}"
+             class="btn btn-outline-primary btn-sm">
+            See more
+          </a>
+        </div>
+
+        <p class="text-muted small mb-1">
+          Topic: {{ room.topic.name }}
+        </p>
+
+        {% if room.description %}
+        <p class="text-muted">
+          {{ room.description|truncatewords:25 }}
+        </p>
+        {% endif %}
+
+        <small class="text-muted">
+          {{ room.created|timesince }} ago
+        </small>
+
+      </div>
+    </div>
+    {% empty %}
+      <p class="text-muted">No posts yet.</p>
+    {% endfor %}
+
+  </div>
+</div>
+{% endblock content %}

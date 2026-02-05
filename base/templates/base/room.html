@@ -2,6 +2,7 @@
 
 {% block content %}
 
+
 <div class="container mt-4">
   <div class="row">
     <div class="col-md-3 mb-4">
@@ -57,9 +58,9 @@
             </div>
           </div>
 
-          <p class="mb-1 text-muted">
+          <a href="{% url 'user-details' room.id %}" class="mb-1 text-muted decoration">
             @{{ room.host.username | capfirst }}
-          </p>
+          </a>
           {% if room.description %}
             <p class="text-muted small">
               {{ room.description | truncatewords:30 }}
