@@ -26,8 +26,9 @@
           <div>
             <h4>{{profile_user.username | capfirst}}</h4>
             <p class="mb-1 text-muted">{{profile_user.email}}</p>
-            {% if user.profile.bio %}
+            {% if user.bio %}
             <p class="mb-0">{{profile_user.bio}}</p>
+ 
             {% endif %}
             {% comment %} <a class="btn btn-outline-primary btn-sm mt-3">Edit Profile</a>
             <a href="{% url 'logout' %}" class="btn btn-outline-primary btn-sm mt-3"

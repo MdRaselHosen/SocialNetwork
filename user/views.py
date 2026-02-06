@@ -44,11 +44,32 @@ def register(request):
 
     return render(request, "register.html")
 
-@login_required(login_url="user/login/")
+@login_required(login_url="/user/login/")
 def logout_(request):
     request.session.flush()
     return redirect('/')
 
-@login_required(login_url="user/login/")
+@login_required(login_url="/user/login/")
 def profile(request):
     return render(request, 'profile.html')
+
+@login_required(login_url="/user/login/")
+def updateProfile(request):
+    user = request.user
+
+    if request.method == 'POST':
+        update_username = request.POST.get('username')
+        update_bio = request.POST.get('bio')
+        print("bio is ", update_bio)
+        
+        user.username = update_username
+        user.bio = update_bio
+
+        if "image" in request.FILES:
+            profile.image = request.FILES["image"]
+
+        user.save()
+            
+        return redirect('profile')
+        
+    return render(request, "userProfileUpdate.html")
