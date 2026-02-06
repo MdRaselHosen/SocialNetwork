@@ -42,6 +42,50 @@
     </div>
   </div>
 </div>
+<div class="row justify-content-center">
+  <div class="col-md-8">
+
+    <h5 class="mb-3">Your Posts Mr. {{ request.user.username|capfirst }}</h5>
+
+    {% for room in rooms %}
+    <div class="card mb-3 shadow-sm">
+      <div class="card-body">
+
+        <div class="d-flex justify-content-between">
+          <h5 class="card-title">
+            <a href="{% url 'post-details' room.id %}" class="text-decoration-none">
+              {{ room.name }}
+            </a>
+          </h5>
+
+          <a href="{% url 'post-details' room.id %}"
+             class="btn btn-outline-primary btn-sm">
+            See more
+          </a>
+        </div>
+
+        <p class="text-muted small mb-1">
+          Topic: {{ room.topic.name }}
+        </p>
+
+        {% if room.description %}
+        <p class="text-muted">
+          {{ room.description|truncatewords:25 }}
+        </p>
+        {% endif %}
+
+        <small class="text-muted">
+          {{ room.created|timesince }} ago
+        </small>
+
+      </div>
+    </div>
+    {% empty %}
+      <p class="text-muted">No posts yet.</p>
+    {% endfor %}
+
+  </div>
+</div>
 
 {% endblock content %}
 

@@ -7,7 +7,7 @@
       <div class="card shadow-sm">
         <div class="card-body d-flex align-items-center">
           <div class="me-4">
-            {% comment %} {% if user.profile and user.profile.image %}
+          {% if user.profile and user.profile.image %}
             <img
               src="{{ user.profile.image.url }}"
               alt="Profile Picture"
@@ -21,7 +21,7 @@
               class="rounded-circle"
               style="width: 120px; height: 120px; object-fit: cover"
             />
-            {% endif %} {% endcomment %}
+            {% endif %}
           </div>
           <div>
             <h4>{{profile_user.username | capfirst}}</h4>

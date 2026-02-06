@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from .models import User
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
+from base.models import Room
 
 # Create your views here.
 
@@ -51,7 +52,12 @@ def logout_(request):
 
 @login_required(login_url="/user/login/")
 def profile(request):
-    return render(request, 'profile.html')
+    user = request.user
+    rooms = Room.objects.filter(host=user)
+    context = {
+        'rooms': rooms
+    }
+    return render(request, 'profile.html', context)
 
 @login_required(login_url="/user/login/")
 def updateProfile(request):

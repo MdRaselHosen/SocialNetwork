@@ -3,25 +3,30 @@ from django.contrib.auth.decorators import login_required
 from .models import Room, Topic, Message
 from django.db.models import Q
 from user.models import User
-
+from django.db.models import Count
 
 
 def room(request):
-
-    messages = Message.objects.all()
-
-
     q = request.GET.get('q') if request.GET.get('q')!= None else ''
     rooms = Room.objects.filter(
         Q(topic__name__icontains=q) |
         Q(name__icontains=q) |
         Q(description__icontains=q)
-    )
+    ).annotate(
+        comment_count = Count('message')
+    ).order_by('-created')
     rooms_count = rooms.count()
 
     topics = Topic.objects.all()
-    context = {'rooms': rooms, 'topics':topics, 'rooms_count': rooms_count}
+
+    context = {
+        'rooms': rooms, 
+        'topics':topics, 
+        'rooms_count': rooms_count, 
+        }
     return render(request, "base/room.html", context)
+ 
+
 
 def postDetails(requset, pk):
     topic = Topic.objects.all()
@@ -111,6 +116,9 @@ def userDetails(request, pk):
     room = Room.objects.get(pk=pk)
     user = User.objects.get(pk=room.host.id)
     rooms = Room.objects.filter(host=user).order_by('-created')
+
+    if request.user == user:
+        return redirect('profile')
 
     context = {
         'profile_user': user,
