@@ -18,12 +18,11 @@
             </li>
 
             {% for topic in topics %}
-              <li class="list-group-item">
-                <a href="{% url 'room' %}?q={{ topic.name }}"
-                   class="text-decoration-none">
-                  {{ topic.name }}
-                </a>
-              </li>
+            <li class="list-group-item">
+              <a href="{% url 'room' %}?q={{ topic.name }}" class="text-decoration-none">
+                {{ topic.name }}
+              </a>
+            </li>
             {% endfor %}
           </ul>
         </div>
@@ -42,8 +41,8 @@
           </p>
 
           <p class="text-muted">
-            Posted by
-            <strong>@{{ room.host.username|capfirst }}</strong>
+            <i class="bi bi-person-circle"></i>
+            <strong>{{ room.host.username|capfirst }}</strong>
             · {{ room.created|timesince }} ago
           </p>
 
@@ -58,41 +57,44 @@
 
           <div class="d-flex justify-content-between">
             <a href="{% url 'room' %}" class="btn btn-outline-secondary btn-sm">
-              ← Back
+              <i class="bi bi-reply"></i>
             </a>
 
             {% if user.is_authenticated and room.host == request.user %}
-              <div>
-                <a href="{% url 'update-room' room.id %}"
-                   class="btn btn-outline-primary btn-sm">
-                  Edit
-                </a>
-                <a href="{% url 'delete-room' room.id %}"
-                   class="btn btn-outline-danger btn-sm">
-                  Delete
-                </a>
-              </div>
+            <div>
+              <a href="{% url 'update-room' room.id %}" class="btn btn-outline-primary btn-sm">
+                <i class="bi bi-pencil-square"></i>
+              </a>
+              <a href="{% url 'delete-room' room.id %}" class="btn btn-outline-danger btn-sm">
+                <i class="bi bi-trash"></i>
+              </a>
+            </div>
             {% endif %}
           </div>
-          
+
           <div class="mt-5">
             {% for message in messages %}
             <p>@{{message.user.username}} {{message.created | timesince}}</p>
             <p>{{message}}</p>
             {% if request.user == room.host or request.user == message.user %}
-            <a href="{% url 'delete-message' message.id %}" class="btn btn-outline-danger">Delete</a>
+            <a href="{% url 'delete-message' message.id %}" class="btn btn-outline-danger"><i
+                class="bi bi-trash"></i></a>
             {% endif %}
             {% endfor %}
           </div>
-          
+
 
         </div>
-        <div class="mt-3">
-            <form method="POST">
-                {% csrf_token %}
-                <input type="text" name="comment" placeholder="Comment here...">
-                <button type="submit" class="btn btn-outline-primary">Comment</button>
-            </form>
+        <div class="mt-3 px-2">
+          <form method="POST">
+            {% csrf_token %}
+            <div class="input-group">
+              <input type="text" name="comment" class="form-control" placeholder="Comment here...">
+              <button type="submit" class="btn btn-outline-primary px-3">
+                <i class="fa-solid fa-paper-plane"></i>
+              </button>
+            </div>
+          </form>
         </div>
       </div>
     </div>
@@ -105,7 +107,7 @@
           <hr>
           {% regroup messages by user as grouped_messages %}
           {% for group in grouped_messages %}
-            <p>@{{ group.grouper.username | capfirst }}</p>
+          <p>@{{ group.grouper.username | capfirst }}</p>
           {% endfor %}
 
           <!-- {% if messages %}
